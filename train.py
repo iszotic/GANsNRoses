@@ -386,6 +386,7 @@ if __name__ == '__main__':
         G_optim.load_state_dict(ckpt['G_optim'])
         D_optim.load_state_dict(ckpt['D_optim'])
         args.start_iter = ckpt['iter']
+        del(ckpt)
 
     if args.distributed:
         G_A2B = nn.parallel.DistributedDataParallel(
@@ -434,8 +435,8 @@ if __name__ == '__main__':
 
     aug = nn.Sequential(
         K.RandomAffine(degrees=(-20,20), scale=(0.8, 1.2), translate=(0.1, 0.1), shear=0.15),
-        kornia.geometry.transform.Resize(256+30),
-        K.RandomCrop((256,256)),
+        kornia.geometry.transform.Resize(args.size+30),
+        K.RandomCrop((args.size,args.size)),
         K.RandomHorizontalFlip(),
     )
 
